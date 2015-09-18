@@ -29,7 +29,32 @@ ajax.get = function (url, trigMethod) {
   			console.log('Error: ' + error.message);
 		});
 	} else { //for explorer and outdated ones
+		var xmlhttp;
 
+	    if (window.XMLHttpRequest) {
+	        // code for IE7+, Firefox, Chrome, Opera, Safari
+	        xmlhttp = new XMLHttpRequest();
+	    } else {
+	        // code for IE6, IE5
+	        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+
+	    xmlhttp.onreadystatechange = function() {
+	        if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+	           if(xmlhttp.status == 200){
+	               window[trigMethod](JSON.parse(xmlhttp.responseText));
+	           }
+	           else if(xmlhttp.status == 400) {
+	              console.log('There was an error 400')
+	           }
+	           else {
+	               console.log('something else other than 200 was returned')
+	           }
+	        }
+	    }
+
+	    xmlhttp.open("GET", url, true);
+	    xmlhttp.send();
 	}
 }
 
